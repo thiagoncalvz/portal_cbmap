@@ -8,7 +8,7 @@
     <title>{{$title}} - Portal CBMAP</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-4">
         <div class="container">
             <a class="navbar-brand" href="{{route('regulamentos.index')}}">
                 <img src="{{asset('logocbmap.png')}}" alt="Bootstrap" width="300" height="90">
@@ -51,8 +51,11 @@
             </div>
         </div>
     </nav>
-    <div class="container">
-        <h1>{{$title}}</h1>
+    <div class="container pb-5">
+        <h3>
+            {{$title}}
+            <small class="text-body-secondary">{{$titleedit}}</small>
+        </h3>
 
         @if ($errors->any())
             <div class="alert alert-danger">

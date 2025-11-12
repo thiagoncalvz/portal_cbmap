@@ -1,4 +1,4 @@
-    <form action="{{$action}}" method="post">
+    <form action="{{$action}}" method="post" enctype="multipart/form-data" class="mt-4">
         @csrf
 
         @if($update)
@@ -45,4 +45,5 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Adicionar</button>
+        <a href="{{route('regulamentos.index')}}" class="btn btn-outline-secondary">Voltar</a>
     </form>

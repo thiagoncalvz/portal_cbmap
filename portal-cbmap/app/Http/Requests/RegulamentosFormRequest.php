@@ -23,14 +23,14 @@ class RegulamentosFormRequest extends FormRequest
     {
         return [
             'titulo' => ['required', 'min:2'],
-            // 'documento' => ['required']
+            'documento' => ['required']
         ];
     }
 
     public function messages(){
         return [
             'titulo.required' => 'O campo título é obrigatório.',
-            // 'documento.required' => 'É obrigatório adicionar um documento (PDF).',
+            'documento.required' => 'É obrigatório adicionar um documento (PDF).',
             'titulo.min' => 'O campo título precisa de pelo menos :min caracteres.'
         ];
     }
