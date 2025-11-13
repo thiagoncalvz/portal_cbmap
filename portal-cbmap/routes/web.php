@@ -5,7 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Middleware\Autenticador;
 use Illuminate\Support\Facades\Route;
 
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use LdapRecord\Models\OpenLDAP\User as LdapUser;
 
@@ -58,27 +58,27 @@ Route::middleware('auth')->group(function () {
 
 
 
-// Route::get('/ldap-test/{cpf}', function (string $cpf) {
-//   try {
-//     $cpf = preg_replace('/\D/', '', $cpf);
-//     $user = LdapUser::whereEquals('uid', $cpf)->first();
+Route::get('/ldap-test/{cpf}', function (string $cpf) {
+  try {
+    $cpf = preg_replace('/\D/', '', $cpf);
+    $user = LdapUser::whereEquals('uid', $cpf)->first();
 
-//     if (!$user) {
-//       return response()->json(['ok' => false, 'msg' => 'Usuário não encontrado no LDAP', 'cpf' => $cpf], 404);
-//     }
+    if (!$user) {
+      return response()->json(['ok' => false, 'msg' => 'Usuário não encontrado no LDAP', 'cpf' => $cpf], 404);
+    }
 
-//     return response()->json([
-//       'ok'   => true,
-//       'dn'   => $user->getDn(),
-//       'cn'   => $user->getFirstAttribute('cn'),
-//       'mail' => $user->getFirstAttribute('mail'),
-//       'uid'  => $user->getFirstAttribute('uid'),
-//     ]);
-//   } catch (\Throwable $e) {
-//     Log::error('LDAP TEST ERROR', ['e' => $e]);
-//     return response()->json(['ok' => false, 'error' => $e->getMessage()], 500);
-//   }
-// });
+    return response()->json([
+      'ok'   => true,
+      'dn'   => $user->getDn(),
+      'cn'   => $user->getFirstAttribute('cn'),
+      'mail' => $user->getFirstAttribute('mail'),
+      'uid'  => $user->getFirstAttribute('uid'),
+    ]);
+  } catch (\Throwable $e) {
+    Log::error('LDAP TEST ERROR', ['e' => $e]);
+    return response()->json(['ok' => false, 'error' => $e->getMessage()], 500);
+  }
+});
 
 
 

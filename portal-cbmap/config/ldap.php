@@ -28,13 +28,16 @@ return [
 
     'connections' => [
         'default' => [
-            'hosts' => ['ldap.cbm.ap.gov.br'],
+            'hosts' => value(function () {
+                $hosts = array_filter(array_map('trim', explode(',', env('LDAP_HOSTS', 'ldap.cbm.ap.gov.br'))));
+                return $hosts ?: ['ldap.cbm.ap.gov.br'];
+            }),
             'username' => env('LDAP_USERNAME'),
             'password' => env('LDAP_PASSWORD'),
-            'base_dn' => 'dc=cbm,dc=ap,dc=gov,dc=br',
-            'port' => 389,
-            'use_ssl' => false,
-            'use_tls' => false,
+            'base_dn' => env('LDAP_BASE_DN', 'dc=cbm,dc=ap,dc=gov,dc=br'),
+            'port' => (int) env('LDAP_PORT', 389),
+            'use_ssl' => filter_var(env('LDAP_USE_SSL', false), FILTER_VALIDATE_BOOL),
+            'use_tls' => filter_var(env('LDAP_USE_TLS', false), FILTER_VALIDATE_BOOL),
         ],
     ],
 
