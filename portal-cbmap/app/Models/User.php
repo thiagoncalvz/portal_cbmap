@@ -2,47 +2,48 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'contas.users';
     protected $fillable = [
+        'keycloak_id',
         'name',
         'email',
-        'password',
+        'password', // pode ficar null se não usar senha local
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', 'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Helpers de role
+    public function rolesRealm(): array
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return session('keycloak.roles.realm', []);
+    }
+
+    public function rolesClient(): array
+    {
+        return session('keycloak.roles.client', []);
+    }
+
+    public function hasRole(string $role, string $scope = 'any'): bool
+    {
+        $realm  = $this->rolesRealm();
+        $client = $this->rolesClient();
+
+        return match ($scope) {
+            'realm'  => in_array($role, $realm, true),
+            'client' => in_array($role, $client, true),
+            default  => in_array($role, $realm, true) || in_array($role, $client, true),
+        };
+    }
+
+    public function hasAnyRole(array $roles, string $scope = 'any'): bool
+    {
+        foreach ($roles as $r) if ($this->hasRole($r, $scope)) return true;
+        return false;
     }
 }

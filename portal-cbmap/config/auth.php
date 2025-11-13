@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'keycloak' => [
+            'driver' => 'keycloak',  // nosso driver customizado
+            'provider' => 'users',   // usa o provider padrão (Eloquent)
+        ],
     ],
 
     /*

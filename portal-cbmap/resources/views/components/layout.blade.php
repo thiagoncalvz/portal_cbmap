@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarScroll">
                 <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                     <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">VISTORIA/PROJETO</a>
+                    <a class="nav-link active" aria-current="page" href="https://sistemas.cbm.ap.gov.br/portal">VISTORIA/PROJETO</a>
                     </li>
                     <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -31,31 +31,46 @@
                     </ul>
                     </li>
                     <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        LEIS E NORMAS
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Leis, Decretos e Portarias</a></li>
-                        <li><a class="dropdown-item" href="#">Normas Administrativas</a></li>
-                        <li><a class="dropdown-item" href="#">Normas Operacionais</a></li>
-                        <li><a class="dropdown-item" href="#">Procedimento Operacional Padrão - POP</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Manuais de Bombeiros</a></li>
-                    </ul>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            LEIS E NORMAS
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{route('regulamentos.index')}}">Leis, Decretos e Portarias</a></li>
+                            <li><a class="dropdown-item" href="#">Normas Administrativas</a></li>
+                            <li><a class="dropdown-item" href="#">Normas Operacionais</a></li>
+                            <li><a class="dropdown-item" href="#">Procedimento Operacional Padrão - POP</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Manuais de Bombeiros</a></li>
+                        </ul>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search"/>
-                    <button class="btn btn-outline-secondary" type="submit">Pesquisar</button>
-                </form>
+                @if(auth('keycloak')->check())
+                    <ul class="navbar-nav navbar-nav-scroll">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ auth('keycloak')->user()->name }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item">Sair</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                @else
+                    <ul class="navbar-nav navbar-nav-scroll">
+                        <li class="nav-item">
+                            <a class="btn btn-outline-secondary" href="{{ route('login') }}">Entrar</a>
+                        </li>
+                    </ul>
+                @endif
             </div>
         </div>
     </nav>
-    <div class="container pb-5">
-        <h3>
-            {{$title}}
-            <small class="text-body-secondary">{{$titleedit}}</small>
-        </h3>
+    <div class="container pb-5 pt-3">
 
         @if ($errors->any())
             <div class="alert alert-danger">
