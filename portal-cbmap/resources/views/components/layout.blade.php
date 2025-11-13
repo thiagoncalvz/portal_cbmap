@@ -71,7 +71,6 @@
         </div>
     </nav>
     <div class="container pb-5 pt-3">
-
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>

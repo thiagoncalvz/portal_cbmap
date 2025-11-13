@@ -1,4 +1,5 @@
-<x-layout title="Leis e Normas do CBMAP" titleedit="">
+<x-layout title="Leis e Normas do CBMAP">
+    <x-regulamentos.elements title="Leis e Normas do CBMAP" titleedit=""/>
     @isset($mensagemSucesso)
     <div class="alert alert-success">
         {{$mensagemSucesso}}
