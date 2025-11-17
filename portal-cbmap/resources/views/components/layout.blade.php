@@ -47,7 +47,7 @@
                 @if(auth('keycloak')->check())
                     <ul class="navbar-nav navbar-nav-scroll">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle text-uppercase" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ auth('keycloak')->user()->name }}
                             </a>
                             <ul class="dropdown-menu">
