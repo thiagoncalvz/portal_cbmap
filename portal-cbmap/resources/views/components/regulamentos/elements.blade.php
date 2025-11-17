@@ -11,9 +11,9 @@
         </h3>
     </div>
     <div class="col-6">
-        <form class="d-flex" role="search">
+        <form class="d-flex" role="search" method="GET" action="{{ route('regulamentos.index') }}">
             <div class="input-group">
-                <input class="form-control" type="search" placeholder="Pesquisar" aria-label="Search"/>
+                <input class="form-control" type="search" name="search" placeholder="Pesquisar" aria-label="Search"/>
                 <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
                 {{-- <button class="btn btn-outline-secondary" type="submit">Pesquisar</button> --}}
             </div>

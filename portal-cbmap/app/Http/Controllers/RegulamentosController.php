@@ -28,7 +28,16 @@ class RegulamentosController extends Controller{
      * FUNÇÃO DA PÁGINA INICIAL DOS REGULAMENTOS
      */
     public function index(Request $request){
-        $regulamento = Regulamentos::all();
+        $query = Regulamentos::query();
+
+        if($request->filled('search')){
+            $query->where(function ($q) use ($request){
+                $q->where('titulo', 'ILIKE', '%' . $request->search . '%')
+                    -> orWhere('resumo', 'ILIKE', '%' . $request->search . '%');
+            });
+        }
+
+        $regulamento = $query->get();
         $mensagemSucesso = session('mensagem.sucesso');
 
         return view('regulamentos.index')
