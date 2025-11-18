@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Regulamentos extends Model
 {
     protected $table = 'tsilva.regulamentos';
-    protected $fillable = ['titulo', 'resumo', 'obs', 'numeroregistro'];
+    protected $fillable = ['titulo', 'resumo', 'obs', 'numeroregistro', 'categoria'];
 
     protected static function booted(){
         self::addGlobalScope('ordered', function (Builder $queryBuilder){

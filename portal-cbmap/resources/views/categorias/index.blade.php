@@ -1,9 +1,14 @@
 <x-layout title="Categorias">
     <x-categorias.elements title="Categorias" titleedit=""/>
     @isset($mensagemSucesso)
-    <div class="alert alert-success">
-        {{$mensagemSucesso}}
-    </div>
+        <div class="alert alert-success">
+            {{$mensagemSucesso}}
+        </div>
+    @endisset
+    @isset($mensagemErro)
+        <div class="alert alert-danger">
+            {{ $mensagemErro }}
+        </div>
     @endisset
     <div class="list-group mt-4">
         @foreach ($Categorias as $index => $Categoria)

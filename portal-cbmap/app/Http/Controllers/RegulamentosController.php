@@ -8,8 +8,7 @@ use App\Models\Regulamentos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Illuminate\Pagination\Paginator;
-
+use App\Models\Categorias;
 
 class RegulamentosController extends Controller{
     /**
@@ -52,8 +51,9 @@ class RegulamentosController extends Controller{
     /**
      * FUNÇÃO DA PÁGINA DO FORMULÁRIO DE ADD DE REGULAMENTOS
      */
-    public function create(){
-        return view('regulamentos.create');
+    public function create(Categorias $categorias){
+        $categorias = Categorias::all();
+        return view('regulamentos.create', compact('categorias'));
     }
 
     /**
@@ -91,8 +91,11 @@ class RegulamentosController extends Controller{
     /**
      * FUNÇÃO DA PÁGINA DO FORMULÁRIO DE EDIÇÃO DE REGULAMENTOS
      */
-    public function edit(Regulamentos $regulamento){
-        return view('regulamentos.edit')->with('regulamento', $regulamento);
+    public function edit(Regulamentos $regulamento, Categorias $categorias){
+        $categorias = Categorias::all();
+        return view('regulamentos.edit')
+            ->with('regulamento', $regulamento)
+            ->with('categorias', $categorias);
     }
 
     /**

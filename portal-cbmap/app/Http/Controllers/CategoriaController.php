@@ -26,8 +26,7 @@ class CategoriaController extends Controller{
 
         if($request->filled('search')){
             $query->where(function ($q) use ($request){
-                $q->where('titulo', 'ILIKE', '%' . $request->search . '%')
-                    -> orWhere('resumo', 'ILIKE', '%' . $request->search . '%');
+                $q->where('nome', 'ILIKE', '%' . $request->search . '%');
             });
         }
 
@@ -38,10 +37,12 @@ class CategoriaController extends Controller{
         $quantidades = $this->countCategorias();
 
         $mensagemSucesso = session('mensagem.sucesso');
+        $mensagemErro = session('mensagem.erro');
 
         return view('categorias.index')
         ->with('Categorias', $categorias)
         ->with('quantidades', $quantidades)
+        ->with('mensagemErro', $mensagemErro)
         ->with('mensagemSucesso', $mensagemSucesso);
     }
 
@@ -71,7 +72,14 @@ class CategoriaController extends Controller{
      * FUNÇÃO DE DELETE DO BANCO DE DADOS E DO MINIO
      */
     public function destroy(Categorias $categoria){
-        // dd($Categoria);
+        $quantidades = $this->countCategorias();
+        $qt = $quantidades[$categoria->nome] ?? 0;
+
+        if ($qt > 0) {
+            return to_route('categoria.index')
+                ->with('mensagem.erro', "Não é possível remover a categoria '{$categoria->nome}', pois existem {$qt} regulamento(s) vinculados a ela.");
+        }
+        
         $categoria->delete();
 
         return to_route('categoria.index')
@@ -96,7 +104,7 @@ class CategoriaController extends Controller{
             return $categoria;
         });
 
-        return to_route('regulamentos.index')
+        return to_route('categoria.index')
             ->with('mensagem.sucesso', "Categorias '{$categoria->nome}' atualizada com sucesso");
     }
 }

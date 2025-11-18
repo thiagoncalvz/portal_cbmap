@@ -17,8 +17,11 @@ Route::middleware(['auth:keycloak'])->group(function () {
     Route::resource('/regulamentos', RegulamentosController::class)
     ->only(['create', 'store', 'destroy', 'edit', 'update']);
 
-    Route::resource('/categoria', CategoriaController::class)
-    ->except(['show']);
+    Route::resource('/regulamentos/categoria', CategoriaController::class)
+    ->except(['show'])
+    ->parameters([
+        'categoria' => 'categoria'
+    ]);
 
 });
 
