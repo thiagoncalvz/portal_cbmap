@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RegulamentosController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\Auth\KeycloakController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,8 +13,13 @@ Route::get('/', function () {
     ->only(['index']);
 
 Route::middleware(['auth:keycloak'])->group(function () {
+
     Route::resource('/regulamentos', RegulamentosController::class)
     ->only(['create', 'store', 'destroy', 'edit', 'update']);
+
+    Route::resource('/categoria', CategoriaController::class)
+    ->except(['show']);
+
 });
 
 Route::get('/regulamentos/download/{regulamento}', [RegulamentosController::class, 'DownloadRegulamento'])

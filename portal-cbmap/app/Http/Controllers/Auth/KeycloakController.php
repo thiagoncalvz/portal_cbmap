@@ -18,15 +18,24 @@ class KeycloakController extends Controller
     {
         $socialiteUser = Socialite::driver('keycloak')->user();
 
+        $claims = $socialiteUser->user;
+
         // Dados básicos
         $keycloakId   = $socialiteUser->getId();      // 'sub' do OpenID
-        $name         = $socialiteUser->getName();
+        $firstName  = $claims['given_name'] ?? null;    // FIRST NAME
+        $lastName   = $claims['family_name'] ?? null;   // opcional
         $email        = $socialiteUser->getEmail();
 
         // Opcional: persistir/atualizar usuário local (para seu uso interno)
         $user = User::updateOrCreate(
             ['keycloak_id' => $keycloakId],
-            ['name' => $name ?? $email, 'email' => $email]
+            [
+            'name'       => $firstName, // aqui vai só o first name
+            'email'      => $email,
+            // se tiver colunas separadas:
+            // 'first_name' => $firstName,
+            // 'last_name'  => $lastName,
+        ]
         );
 
         // Tokens e claims para extrair roles

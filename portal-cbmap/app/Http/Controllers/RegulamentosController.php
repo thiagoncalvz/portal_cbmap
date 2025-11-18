@@ -8,6 +8,7 @@ use App\Models\Regulamentos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Pagination\Paginator;
 
 
 class RegulamentosController extends Controller{
@@ -37,7 +38,10 @@ class RegulamentosController extends Controller{
             });
         }
 
-        $regulamento = $query->get();
+        $regulamento = $query
+            ->paginate(5)
+            ->appends($request->only('search'));
+
         $mensagemSucesso = session('mensagem.sucesso');
 
         return view('regulamentos.index')

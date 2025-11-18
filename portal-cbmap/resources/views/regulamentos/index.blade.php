@@ -27,4 +27,7 @@
         </div>
         @endforeach
     </div>
+    <div class="mt-3">
+        {{ $Regulamentos->links() }}
+    </div>
 </x-layout>
