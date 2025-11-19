@@ -35,17 +35,18 @@
                             LEIS E NORMAS
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{route('regulamentos.index')}}">Leis, Decretos e Portarias</a></li>
-                            <li><a class="dropdown-item" href="#">Normas Administrativas</a></li>
-                            <li><a class="dropdown-item" href="#">Normas Operacionais</a></li>
-                            <li><a class="dropdown-item" href="#">Procedimento Operacional Padrão - POP</a></li>
+                            <li><a class="dropdown-item" href="{{ route('regulamentos.index', ['categoria' => 'all']) }}">Todo os regulamentos</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Manuais de Bombeiros</a></li>
+                            @foreach($categorias as $cat)
+                                <li><a class="dropdown-item" href="{{ route('regulamentos.index', ['categoria' => $cat->id]) }}">{{ $cat->nome }}</a></li>
+                            @endforeach
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{route('categoria.index')}}">CRIAR CATEGORIA</a>
-                    </li>
+                    @if(auth('keycloak')->check())
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('categoria.index')}}">CRIAR CATEGORIA</a>
+                        </li>
+                    @endif
                 </ul>
                 @if(auth('keycloak')->check())
                     <ul class="navbar-nav navbar-nav-scroll">

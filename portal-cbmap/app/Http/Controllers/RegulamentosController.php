@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegulamentosFormRequest;
 use App\Facades\MinIO;
 use App\Models\Regulamentos;
+use App\Models\Categorias;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Models\Categorias;
 
 class RegulamentosController extends Controller{
     /**
@@ -27,13 +28,29 @@ class RegulamentosController extends Controller{
     /**
      * FUNÇÃO DA PÁGINA INICIAL DOS REGULAMENTOS
      */
-    public function index(Request $request){
+    public function index(Request $request, ?string $categoria = null){
         $query = Regulamentos::query();
 
-        if($request->filled('search')){
-            $query->where(function ($q) use ($request){
-                $q->where('titulo', 'ILIKE', '%' . $request->search . '%')
-                    -> orWhere('resumo', 'ILIKE', '%' . $request->search . '%');
+        // 1) Filtro por categoria
+        if ($categoria && $categoria !== 'all') {
+            // $categoria é o ID, buscamos o nome correspondente
+            $categoriaModel = Categorias::findOrFail($categoria);
+            $nomeCategoria = $categoriaModel->nome;
+
+            $query->where('categoria', $nomeCategoria);
+        }
+
+        // 2) Filtro por busca (várias palavras)
+        if ($request->filled('search')) {
+            $terms = preg_split('/\s+/', trim($request->search));
+
+            $query->where(function (Builder $q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function (Builder $sub) use ($term) {
+                        $sub->where('titulo', 'ILIKE', '%' . $term . '%')
+                            ->orWhere('resumo', 'ILIKE', '%' . $term . '%');
+                    });
+                }
             });
         }
 
@@ -51,9 +68,8 @@ class RegulamentosController extends Controller{
     /**
      * FUNÇÃO DA PÁGINA DO FORMULÁRIO DE ADD DE REGULAMENTOS
      */
-    public function create(Categorias $categorias){
-        $categorias = Categorias::all();
-        return view('regulamentos.create', compact('categorias'));
+    public function create(){
+        return view('regulamentos.create');
     }
 
     /**
@@ -91,11 +107,10 @@ class RegulamentosController extends Controller{
     /**
      * FUNÇÃO DA PÁGINA DO FORMULÁRIO DE EDIÇÃO DE REGULAMENTOS
      */
-    public function edit(Regulamentos $regulamento, Categorias $categorias){
+    public function edit(Regulamentos $regulamento){
         $categorias = Categorias::all();
         return view('regulamentos.edit')
-            ->with('regulamento', $regulamento)
-            ->with('categorias', $categorias);
+            ->with('regulamento', $regulamento);
     }
 
     /**

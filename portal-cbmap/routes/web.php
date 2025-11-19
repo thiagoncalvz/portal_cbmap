@@ -9,8 +9,14 @@ Route::get('/', function () {
     return redirect('/regulamentos');
 })->name('dashboard');
 
-    Route::resource('/regulamentos', RegulamentosController::class)
-    ->only(['index']);
+// INDEX com filtro opcional de categoria (all ou id)
+Route::get('/regulamentos/{categoria?}', [RegulamentosController::class, 'index'])
+    ->where('categoria', '[0-9]+|all')
+    ->name('regulamentos.index');
+
+// resource SEM o index (para não conflitar)
+Route::resource('/regulamentos', RegulamentosController::class)
+    ->except(['index', 'show']);
 
 Route::middleware(['auth:keycloak'])->group(function () {
 
